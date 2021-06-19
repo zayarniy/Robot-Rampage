@@ -45,6 +45,7 @@ namespace Robot_Rampage
                 {
                     mapSquares[x, y] = FloorTileStart;
                 }
+            GenerateRandomMap();
         }
         #endregion
         #region Information about Map Squares
@@ -167,6 +168,33 @@ namespace Robot_Rampage
                     {
                         spriteBatch.Draw(texture,SquareScreenRectangle(x, y),tiles[GetTileAtSquare(x, y)], Color.White);
                     }
+                }
+        }
+        #endregion
+
+        #region Map Generation
+        static public void GenerateRandomMap()
+        {
+            int wallChancePerSquare = 10;
+            int floorTile = rand.Next(FloorTileStart, FloorTileEnd + 1);
+            int wallTile = rand.Next(WallTileStart, WallTileEnd + 1);
+            for (int x = 0; x < MapWidth; x++)
+                for (int y = 0; y < MapHeight; y++)
+                {
+                    mapSquares[x, y] = floorTile;
+                    if ((x == 0) || (y == 0) ||
+                    (x == MapWidth - 1) || (y == MapHeight - 1))
+                    {
+                        mapSquares[x, y] = wallTile;
+                        continue;
+                    }
+                    if ((x == 1) || (y == 1) ||
+                    (x == MapWidth - 2) || (y == MapHeight - 2))
+                    {
+                        continue;
+                    }
+                    if (rand.Next(0, 100) <= wallChancePerSquare)
+                        mapSquares[x, y] = wallTile;
                 }
         }
         #endregion
