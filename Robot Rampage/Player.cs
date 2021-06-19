@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -21,8 +17,8 @@ namespace Robot_Rampage
         private static float playerSpeed = 90f;
 
         private static Rectangle scrollArea = new Rectangle(150, 100, 500, 400);
-
         #endregion
+
         #region Initialization
         public static void Initialize(Texture2D texture,Rectangle baseInitialFrame,int baseFrameCount,Rectangle turretInitialFrame, int turretFrameCount, Vector2 worldLocation)
         {
@@ -35,26 +31,13 @@ namespace Robot_Rampage
             for (int x = 1; x < baseFrameCount; x++)
             {
                 BaseSprite.AddFrame(
-                new Rectangle(
-                baseInitialFrame.X + (frameHeight * x),
-                baseInitialFrame.Y,
-                frameWidth,
-                frameHeight));
+                new Rectangle(baseInitialFrame.X + (frameHeight * x),baseInitialFrame.Y,frameWidth,frameHeight));
             }
-            TurretSprite = new Sprite(
-            worldLocation,
-            texture,
-            turretInitialFrame,
-            Vector2.Zero);
+            TurretSprite = new Sprite(worldLocation, texture, turretInitialFrame, Vector2.Zero);
             TurretSprite.Animate = false;
             for (int x = 1; x < turretFrameCount; x++)
             {
-                BaseSprite.AddFrame(
-                new Rectangle(
-                turretInitialFrame.X + (frameHeight * x),
-                turretInitialFrame.Y,
-                frameWidth,
-                frameHeight));
+                BaseSprite.AddFrame(new Rectangle(turretInitialFrame.X + (frameHeight * x),turretInitialFrame.Y,frameWidth, frameHeight));
             }
         }
         #endregion
@@ -66,6 +49,7 @@ namespace Robot_Rampage
             clampToWorld();
             TurretSprite.WorldLocation = BaseSprite.WorldLocation;
         }
+
         public static void Draw(SpriteBatch spriteBatch)
         {
             BaseSprite.Draw(spriteBatch);
@@ -74,8 +58,7 @@ namespace Robot_Rampage
         #endregion
 
         #region Input Handling
-        private static Vector2 handleKeyboardMovement(KeyboardState
-        keyState)
+        private static Vector2 handleKeyboardMovement(KeyboardState keyState)
         {
             Vector2 keyMovement = Vector2.Zero;
             if (keyState.IsKeyDown(Keys.W))
@@ -88,13 +71,12 @@ namespace Robot_Rampage
                 keyMovement.X++;
             return keyMovement;
         }
-        private static Vector2 handleGamePadMovement(GamePadState
-        gamepadState)
+
+        private static Vector2 handleGamePadMovement(GamePadState gamepadState)
         {
-            return new Vector2(
-            gamepadState.ThumbSticks.Left.X,
-            -gamepadState.ThumbSticks.Left.Y);
+            return new Vector2(gamepadState.ThumbSticks.Left.X, -gamepadState.ThumbSticks.Left.Y);
         }
+
         private static Vector2 handleKeyboardShots(KeyboardState keyState)
         {
             Vector2 keyShots = Vector2.Zero;
@@ -116,13 +98,12 @@ namespace Robot_Rampage
                 keyShots = new Vector2(1, -1);
             return keyShots;
         }
-        private static Vector2 handleGamePadShots(GamePadState
-        gamepadState)
+
+        private static Vector2 handleGamePadShots(GamePadState gamepadState)
         {
-            return new Vector2(
-            gamepadState.ThumbSticks.Right.X,
-            -gamepadState.ThumbSticks.Right.Y);
+            return new Vector2(gamepadState.ThumbSticks.Right.X,-gamepadState.ThumbSticks.Right.Y);
         }
+
         private static void handleInput(GameTime gameTime)
         {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -156,14 +137,8 @@ namespace Robot_Rampage
         {
             float currentX = BaseSprite.WorldLocation.X;
             float currentY = BaseSprite.WorldLocation.Y;
-            currentX = MathHelper.Clamp(
-            currentX,
-            0,
-            Camera.WorldRectangle.Right - BaseSprite.FrameWidth);
-            currentY = MathHelper.Clamp(
-            currentY,
-            0,
-            Camera.WorldRectangle.Bottom - BaseSprite.FrameHeight);
+            currentX = MathHelper.Clamp(currentX, 0, Camera.WorldRectangle.Right - BaseSprite.FrameWidth);
+            currentY = MathHelper.Clamp(currentY, 0, Camera.WorldRectangle.Bottom - BaseSprite.FrameHeight);
             BaseSprite.WorldLocation = new Vector2(currentX, currentY);
         }
 
@@ -171,47 +146,32 @@ namespace Robot_Rampage
         {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
             float moveScale = playerSpeed * elapsed;
-            if ((BaseSprite.ScreenRectangle.X < scrollArea.X) &&
-            (moveAngle.X < 0))
+            if ((BaseSprite.ScreenRectangle.X < scrollArea.X) && (moveAngle.X < 0))
             {
                 Camera.Move(new Vector2(moveAngle.X, 0) * moveScale);
             }
-            if ((BaseSprite.ScreenRectangle.Right > scrollArea.Right) &&
-            (moveAngle.X > 0))
+            if ((BaseSprite.ScreenRectangle.Right > scrollArea.Right) && (moveAngle.X > 0))
             {
                 Camera.Move(new Vector2(moveAngle.X, 0) * moveScale);
             }
-            if ((BaseSprite.ScreenRectangle.Y < scrollArea.Y) &&
-            (moveAngle.Y < 0))
+            if ((BaseSprite.ScreenRectangle.Y < scrollArea.Y) && (moveAngle.Y < 0))
             {
                 Camera.Move(new Vector2(0, moveAngle.Y) * moveScale);
             }
-            if ((BaseSprite.ScreenRectangle.Bottom > scrollArea.Bottom) &&
-            (moveAngle.Y > 0))
+            if ((BaseSprite.ScreenRectangle.Bottom > scrollArea.Bottom) && (moveAngle.Y > 0))
             {
                 Camera.Move(new Vector2(0, moveAngle.Y) * moveScale);
             }
         }
 
-        private static Vector2 checkTileObstacles(
-float elapsedTime,
-Vector2 moveAngle)
+        private static Vector2 checkTileObstacles(float elapsedTime,Vector2 moveAngle)
         {
-            Vector2 newHorizontalLocation = BaseSprite.WorldLocation +
-            (new Vector2(moveAngle.X, 0) * (playerSpeed *
-            elapsedTime));
-            Vector2 newVerticalLocation = BaseSprite.WorldLocation +
-            (new Vector2(0, moveAngle.Y) * (playerSpeed *
-            elapsedTime));
-            Rectangle newHorizontalRect = new Rectangle(
-            (int)newHorizontalLocation.X,
-            (int)BaseSprite.WorldLocation.Y, BaseSprite.FrameWidth,
-BaseSprite.FrameHeight);
-            Rectangle newVerticalRect = new Rectangle(
-            (int)BaseSprite.WorldLocation.X,
-            (int)newVerticalLocation.Y,
-            BaseSprite.FrameWidth,
-            BaseSprite.FrameHeight);
+            Vector2 newHorizontalLocation = BaseSprite.WorldLocation + (new Vector2(moveAngle.X, 0) * (playerSpeed * elapsedTime));
+            Vector2 newVerticalLocation = BaseSprite.WorldLocation + (new Vector2(0, moveAngle.Y) * (playerSpeed * elapsedTime));
+            Rectangle newHorizontalRect = new Rectangle((int)newHorizontalLocation.X,
+            (int)BaseSprite.WorldLocation.Y, BaseSprite.FrameWidth,BaseSprite.FrameHeight);
+            Rectangle newVerticalRect = new Rectangle((int)BaseSprite.WorldLocation.X,(int)newVerticalLocation.Y,
+            BaseSprite.FrameWidth,BaseSprite.FrameHeight);
             int horizLeftPixel = 0;
             int horizRightPixel = 0;
             int vertTopPixel = 0;
@@ -277,6 +237,5 @@ BaseSprite.FrameHeight);
             return moveAngle;
         }
         #endregion
-
     }
 }
