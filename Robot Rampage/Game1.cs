@@ -9,8 +9,20 @@ namespace Robot_Rampage
     /// </summary>
     public class Game1 : Game
     {
+        #region Declaration
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        Texture2D spriteSheet;
+        Texture2D titleScreen;
+        SpriteFont pericles14;
+
+        // Temporary Demo Code Begin
+        Sprite tempSprite;
+        Sprite tempSprite2;
+        // Temporary Demo Code End
+
+        #endregion
 
         public Game1()
         {
@@ -27,7 +39,9 @@ namespace Robot_Rampage
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            this.graphics.PreferredBackBufferWidth = 800;
+            this.graphics.PreferredBackBufferHeight = 600;
+            this.graphics.ApplyChanges();
             base.Initialize();
         }
 
@@ -39,6 +53,20 @@ namespace Robot_Rampage
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            spriteSheet = Content.Load<Texture2D>(@"Textures\SpriteSheet");
+            titleScreen = Content.Load<Texture2D>(@"Textures\TitleScreen");
+            pericles14 = Content.Load<SpriteFont>(@"Fonts\Pericles14");
+            Camera.WorldRectangle = new Rectangle(0, 0, 1600, 1600);
+            Camera.ViewPortWidth = 800;
+            Camera.ViewPortHeight = 600;
+
+            // Temporary Demo Code Begin
+            tempSprite = new Sprite(new Vector2(100, 100),spriteSheet,new Rectangle(0, 64, 32, 32),Vector2.Zero);
+            tempSprite2 = new Sprite(new Vector2(200, 200),spriteSheet,new Rectangle(0, 160, 32, 32), Vector2.Zero);
+            // Temporary Demo Code End
+
+            TileMap.Initialize(spriteSheet);
 
             // TODO: use this.Content to load your game content here
         }
@@ -63,7 +91,30 @@ namespace Robot_Rampage
                 Exit();
 
             // TODO: Add your update logic here
-
+            // Temporary Demo Code Begin
+            Vector2 spriteMove = Vector2.Zero;
+            Vector2 cameraMove = Vector2.Zero;
+            if (Keyboard.GetState().IsKeyDown(Keys.A))
+                spriteMove.X = -1;
+            if (Keyboard.GetState().IsKeyDown(Keys.D))
+                spriteMove.X = 1;
+            if (Keyboard.GetState().IsKeyDown(Keys.W))
+                spriteMove.Y = -1;
+            if (Keyboard.GetState().IsKeyDown(Keys.S))
+                spriteMove.Y = 1;
+            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+                cameraMove.X = -1;
+            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+                cameraMove.X = 1;
+            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+                cameraMove.Y = -1;
+            if (Keyboard.GetState().IsKeyDown(Keys.Down))
+                cameraMove.Y = 1;
+            Camera.Move(cameraMove);
+            tempSprite.Velocity = spriteMove * 60;
+            tempSprite.Update(gameTime);
+            tempSprite2.Update(gameTime);
+            // Temporary Demo Code End
             base.Update(gameTime);
         }
 
@@ -73,8 +124,15 @@ namespace Robot_Rampage
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            GraphicsDevice.Clear(Color.White);
+            // Temporary Demo Code Begin
+            spriteBatch.Begin();
+            TileMap.Draw(spriteBatch);
+            tempSprite.Draw(spriteBatch);
+            tempSprite2.Draw(spriteBatch);
+            spriteBatch.End();
+            // Temporary Demo Code End
+           
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
