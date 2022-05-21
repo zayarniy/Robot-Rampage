@@ -70,6 +70,8 @@
     <Content Include="Content\Textures\SpriteSheet.png" />
     <Content Include="Content\Textures\TitleScreen.png" />
     <Content Include="Icon.ico" />
+    <Content Include="MonogameSetup\MonoGameSetup.exe" />
+    <Content Include="MonogameSetup\VC_redist.x64.exe" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
